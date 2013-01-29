@@ -55,12 +55,21 @@ describe "Authentication" do
 	        end
 	      end
 	    end
+      describe "in the microposts controller" do
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { response.should redirect_to(signin_path) }
+        end
+      end
 	  end
 
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
-
       describe "in the Users controller" do
+        it { should_not have_link("Profile", href: user_path(user)) }
+        it { should_not have_link("Settings", href: edit_user_path(user)) }
+        it { should_not have_link("Sign out", href: signout_path) }
+        it { should_not have_link("Users", href: users_path) }
 
         describe "visiting the edit page" do
           before { visit edit_user_path(user) }
